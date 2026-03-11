@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.env
+data/raw/*.csv
+data/reports/*.json
+data/processed_clean.csv
+data/flagged_records.csv
+.DS_Store
+Thumbs.db
+.vscode/
