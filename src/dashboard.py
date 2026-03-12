@@ -38,7 +38,7 @@ if uploaded is not None:
         report, clean_df, flagged_df = run_validation(tmp_path)
     os.unlink(tmp_path)
 else:
-    demo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'field_records.csv')
+    demo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'field_records.csv')
     if os.path.exists(demo_path):
         with st.spinner('Running validation on demo data...'):
             report, clean_df, flagged_df = run_validation(demo_path)
