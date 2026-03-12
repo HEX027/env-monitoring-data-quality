@@ -206,14 +206,5 @@ python src/load_db.py
 streamlit run src/dashboard.py
 ```
 
----
-
-## Relevance to WRI TerraMatch
-
-TerraMatch collects restoration project data from 200+ champions across Africa, Brazil, and India. The data intern role requires cleaning and structuring that data to meet quality control requirements, writing SQL queries against the TerraMatch database, and building data connections. This project is a direct implementation of that workflow at smaller scale.
-
----
-
 ## About
-
-Amisha Ganvir - MPS Data Science, UMBC - https://github.com/HEX027
+https://github.com/HEX027
