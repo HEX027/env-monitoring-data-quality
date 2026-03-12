@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import os, sys
+import os, sys, io
 sys.path.insert(0, 'C:\\env_quality_project')
-from src.validate import run_validation
+from validate import run_validation
 
 st.set_page_config(page_title='Environmental Data Quality Pipeline', page_icon='🌿', layout='wide')
 
@@ -39,9 +39,34 @@ if uploaded is not None:
     with st.spinner('Running validation...'):
         report, clean_df, flagged_df = run_validation(tmp_path)
     os.unlink(tmp_path)
-elif use_demo and os.path.exists('data/raw/field_records.csv'):
+elif use_demo:
+    import numpy as np
+    rng = np.random.default_rng(42)
+    n = 500
+    regions = ['Sahel_Burkina_01','Kenya_Rift_01','Ethiopia_Highland','Ghana_Volta_01',
+               'Tanzania_Usambara','Uganda_Rwenzori','Rwanda_Volcanoes','Senegal_Casamance',
+               'Mali_Dogon','Cameroon_Adamawa']
+    survey_types = ['tree_inventory','biodiversity_survey','soil_measurement','gps_waypoint']
+    demo_df = pd.DataFrame({
+        'record_id':        [f'REC{i:05d}' for i in range(n)],
+        'region':           rng.choice(regions + ['INVALID_REGION'], n, p=[0.095]*10+[0.05]),
+        'survey_type':      rng.choice(survey_types, n),
+        'latitude':         rng.uniform(-30, 35, n).tolist()[:n-10] + rng.uniform(-90,-40,10).tolist(),
+        'longitude':        rng.uniform(-15, 50, n),
+        'survey_date':      ['2023-' + f'{rng.integers(1,13):02d}-' + f'{rng.integers(1,28):02d}' for _ in range(n-5)] + ['bad-date']*5,
+        'surveyor_id':      [f'SV{rng.integers(100,999)}' if rng.random() > 0.04 else None for _ in range(n)],
+        'canopy_cover_pct': rng.uniform(0, 105, n),
+        'tree_height_m':    rng.uniform(0, 45, n),
+        'soil_ph':          rng.uniform(4, 15, n),
+        'biomass_kg':       rng.uniform(10, 5000, n),
+    })
+    # introduce a few duplicates
+    demo_df = pd.concat([demo_df, demo_df.iloc[:8]], ignore_index=True)
+    buf = io.StringIO()
+    demo_df.to_csv(buf, index=False)
+    buf.seek(0)
     with st.spinner('Running validation on demo data...'):
-        report, clean_df, flagged_df = run_validation('data/raw/field_records.csv')
+        report, clean_df, flagged_df = run_validation(buf)
 else:
     st.info('Upload a CSV file or check Use built-in demo data in the sidebar.')
     st.stop()
