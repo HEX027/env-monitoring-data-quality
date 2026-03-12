@@ -2,9 +2,6 @@
 
 An automated data validation framework for environmental field records collected by restoration programs across Africa. Built with Python, Great Expectations, PostgreSQL, and Streamlit.
 
-> Amisha Ganvir - MPS Data Science, UMBC  
-> github.com/HEX027
-
 ---
 
 ![Dashboard Overview](assets/screenshot_dashboard.png)
